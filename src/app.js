@@ -12,8 +12,21 @@ import { initGoogleAuth } from "./utils/passport.js";
 dotenv.config();
 initGoogleAuth();
 
+const allowedOrigins = [
+  "http://localhost:5173",
+  ...(process.env.FRONTEND_URL
+    ? process.env.FRONTEND_URL.split(",").map((origin) => origin.trim())
+    : []),
+].filter(Boolean);
+
 const corsOptions = {
-  origin: "http://localhost:5173",
+  origin(origin, callback) {
+    if (!origin || allowedOrigins.includes(origin)) {
+      return callback(null, true);
+    }
+
+    return callback(new Error("Not allowed by CORS"));
+  },
   optionsSuccessStatus: 200,
   credentials: true,
 };
