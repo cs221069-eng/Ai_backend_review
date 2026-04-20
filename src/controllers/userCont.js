@@ -1,6 +1,6 @@
 import User from "../models/user.js";
 import bcrypt from "bcrypt";
-import generateToken from "../utils/token.js";
+import generateToken, { getAuthCookieOptions } from "../utils/token.js";
 
 async function registerUser(req, res) {
   try {
@@ -69,9 +69,7 @@ async function loginUser(req, res) {
 }
 
 function logoutUser(_req, res) {
-  res.clearCookie("token", {
-    httpOnly: true,
-  });
+  res.clearCookie("token", getAuthCookieOptions());
 
   return res.status(200).json({
     message: "Logout successful",
