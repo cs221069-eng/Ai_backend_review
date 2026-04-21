@@ -11,7 +11,7 @@ import { initGoogleAuth } from "./utils/passport.js";
 
 dotenv.config();
 initGoogleAuth();
-
+console.log('process.env.FRONTEND_URL')
 const parseOrigins = (value) =>
   (value || "")
     .split(",")
