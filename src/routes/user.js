@@ -5,7 +5,10 @@ import generateToken from "../utils/token.js";
 import { protectRoute } from "../utils/auth.js";
 
 const router = express.Router();
-const frontendAppUrl = process.env.FRONTEND_APP_URL || "http://localhost:5173";
+const frontendAppUrl =
+  process.env.FRONTEND_APP_URL ||
+  process.env.FRONTEND_URL?.split(",")[0]?.trim() ||
+  "http://localhost:5173";
 
 router.post("/register", userController.registerUser);
 router.post("/login", userController.loginUser);
@@ -24,7 +27,7 @@ router.get(
   passport.authenticate("google", { session: false }),
   async (req, res) => {
     generateToken(req.user, res);
-    return res.redirect(`${frontendAppUrl}/coding`);
+    return res.redirect(`${frontendAppUrl.replace(/\/$/, "")}/coding`);
   }
 );
 

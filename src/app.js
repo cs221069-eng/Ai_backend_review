@@ -12,12 +12,13 @@ import { initGoogleAuth } from "./utils/passport.js";
 dotenv.config();
 initGoogleAuth();
 
-const allowedOrigins = [
-  "http://localhost:5173",
-  ...(process.env.FRONTEND_URL
-    ? process.env.FRONTEND_URL.split(",").map((origin) => origin.trim())
-    : []),
-].filter(Boolean);
+const parseOrigins = (value) =>
+  (value || "")
+    .split(",")
+    .map((origin) => origin.trim().replace(/\/$/, ""))
+    .filter(Boolean);
+
+const allowedOrigins = [...new Set(["http://localhost:5173", ...parseOrigins(process.env.FRONTEND_URL)])];
 
 const corsOptions = {
   origin(origin, callback) {
