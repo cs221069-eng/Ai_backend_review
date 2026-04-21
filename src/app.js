@@ -39,7 +39,14 @@ app.use(passport.initialize());
 app.use(cookieParser());
 app.use(express.json());
 
-DB();
+app.use(async (_req, res, next) => {
+  try {
+    await DB();
+    next();
+  } catch (error) {
+    return res.status(500).json({ message: "Database connection failed" });
+  }
+});
 
 app.use("/api/users", userRoutes);
 app.use("/api/openai", openaiRoutes);
